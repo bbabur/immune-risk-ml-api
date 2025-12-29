@@ -1,0 +1,16 @@
+# Bu dosya ML servisi için ayrı bir Render.com blueprint'idir
+# ML servisini ayrı bir repo'ya taşırsanız bu dosyayı kullanabilirsiniz
+
+services:
+  - type: web
+    name: immune-risk-ml-api
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+
