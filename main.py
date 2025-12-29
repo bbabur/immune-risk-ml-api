@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 
+
 # Orijinal model kolon adlari alias olarak saklaniyor, Python-friendly alanlar kullaniliyor.
 class Features(BaseModel):
     otit_sayisi_ge_4: int = Field(alias="1 Yıl İçinde Otit Sayısı ≥4", default=0)
@@ -117,9 +118,17 @@ def root() -> dict:
 @app.get("/health")
 def health() -> dict:
     """Sağlık kontrolü endpoint'i"""
+    import os
+    model_path = Path(__file__).resolve().parent / "modelV1.pkl"
+    
     return {
         "status": "ok",
-        "model_loaded": MODEL_LOADED
+        "model_loaded": MODEL_LOADED,
+        "model_path": str(model_path),
+        "model_exists": model_path.exists(),
+        "model_size": model_path.stat().st_size if model_path.exists() else 0,
+        "cwd": os.getcwd(),
+        "files_in_dir": os.listdir(Path(__file__).resolve().parent)
     }
 
 
